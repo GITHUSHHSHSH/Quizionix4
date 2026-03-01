@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Sign In</title>
+  <meta http-equiv="refresh" content="0; url=frontpage.html#signin" />
+  <script>window.location.replace("frontpage.html#signin");</script>
+  <link rel="preload" href="assets/sfx/background/landing%20page%20background.mp3" as="audio" />
+  <link rel="stylesheet" href="assets/css/base.css?v=7" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/unified-theme.css?v=2" />
+</head>
+<body data-page="login">
+  <main class="page auth-shell">
+    <section class="auth-card auth-split card glow">
+      <aside class="auth-visual" aria-hidden="true">
+        <div class="auth-visual-fallback"></div>
+      </aside>
+
+      <section class="auth-content">
+        <a class="icon-back" href="frontpage.html" aria-label="Back to front page"></a>
+        <h1>Sign In</h1>
+        <p class="muted">Please use your Fatima School email.</p>
+        <form id="login-form" class="form">
+          <label>Email<input id="login-email" type="email" required /></label>
+          <label>Password</label>
+          <span class="input-with-icon">
+            <input id="login-password" type="password" required />
+            <button id="toggle-login-password" class="icon-eye" type="button" aria-label="Show or hide password">&#128065;</button>
+          </span>
+          <button class="btn primary" type="submit">Sign In</button>
+        </form>
+        <div class="row auth-links-row">
+          <a class="link" href="#" id="forgot-password">Forgot password?</a>
+          <a class="link" href="register.html">Don't have an account? Create one</a>
+        </div>
+        <p id="login-msg" class="msg"></p>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="assets/js/app.js?v=4"></script>
+</body>
+</html>
+
+
+
+

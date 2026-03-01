@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Progress</title>
+  <link rel="stylesheet" href="assets/css/base.css?v=7" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/unified-theme.css?v=1" />
+</head>
+<body data-page="progress">
+  <main class="page">
+    <header class="card top-nav">
+      <h1>Mastery and Progress</h1>
+      <nav class="row">
+        <a class="link" href="dashboard.html">Dashboard</a>
+        <a class="link" href="progress.html">Progress</a>
+      </nav>
+    </header>
+
+    <section class="dashboard-grid">
+      <section class="card">
+        <h2>Mastery Map</h2>
+        <div id="mastery-map"></div>
+      </section>
+
+      <section class="card">
+        <h2>Knowledge Health Trend</h2>
+        <svg id="kh-chart" viewBox="0 0 320 120" role="img" aria-label="Knowledge health trend line chart">
+          <polyline id="kh-polyline" points="" fill="none" stroke="currentColor" stroke-width="3"></polyline>
+        </svg>
+        <p>Total XP: <span id="p-xp">0</span></p>
+        <p>Knowledge Health: <span id="p-kh">100</span></p>
+        <p>Difficulty: <span id="p-difficulty">Beginner</span></p>
+        <p>Overall Mastery: <span id="p-mastery">0%</span></p>
+        <div class="meter"><span id="p-meter"></span></div>
+      </section>
+    </section>
+
+    <section class="card badges-panel">
+      <h2>Badges</h2>
+      <div id="progress-badges" class="row"></div>
+      <div class="row">
+        <button class="btn" id="export-json" type="button">Export JSON Metrics</button>
+        <button class="btn" id="copy-json" type="button">Copy JSON</button>
+      </div>
+      <p id="export-msg" class="msg"></p>
+    </section>
+  </main>
+  <script type="module" src="assets/js/app.js?v=4"></script>
+</body>
+</html>
+

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Register</title>
+  <meta http-equiv="refresh" content="0; url=frontpage.html#signup" />
+  <script>window.location.replace("frontpage.html#signup");</script>
+  <link rel="preload" href="assets/sfx/background/landing%20page%20background.mp3" as="audio" />
+  <link rel="stylesheet" href="assets/css/base.css?v=7" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/unified-theme.css?v=2" />
+</head>
+<body data-page="register">
+  <main class="page auth-shell">
+    <section class="auth-card auth-split card glow">
+      <aside class="auth-visual" aria-hidden="true">
+        <div class="auth-visual-fallback"></div>
+      </aside>
+
+      <section class="auth-content">
+        <a class="icon-back" href="frontpage.html" aria-label="Back to front page"></a>
+        <h1>Create Account</h1>
+        <p class="muted">Please use your Fatima School email.</p>
+        <form id="register-form" class="form">
+          <label>Name<input id="reg-name" type="text" required /></label>
+          <label>Email<input id="reg-email" type="email" required /></label>
+          <label>Password</label>
+          <span class="input-with-icon">
+            <input id="reg-password" type="password" minlength="6" required />
+            <button id="toggle-reg-password" class="icon-eye" type="button" aria-label="Show or hide password">&#128065;</button>
+          </span>
+          <label>Confirm Password</label>
+          <span class="input-with-icon">
+            <input id="reg-confirm-password" type="password" minlength="6" required />
+            <button id="toggle-reg-confirm" class="icon-eye" type="button" aria-label="Show or hide confirm password">&#128065;</button>
+          </span>
+          <button class="btn primary" type="submit">Sign Up</button>
+        </form>
+        <div class="row auth-links-row">
+          <span class="muted">Already have an account?</span>
+          <a class="link" href="login.html">Sign In</a>
+        </div>
+        <p id="register-msg" class="msg"></p>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="assets/js/app.js?v=4"></script>
+</body>
+</html>
+
+
+

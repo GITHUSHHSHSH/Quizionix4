@@ -1,0 +1,782 @@
+/* Home landing: minimalist, aligned with global theme tokens */
+body[data-page="home"] {
+  background:
+    radial-gradient(circle at 12% 14%, var(--bg-glow-a), transparent 38%),
+    radial-gradient(circle at 88% 82%, var(--bg-glow-b), transparent 42%),
+    linear-gradient(165deg, var(--bg), var(--bg-2)) !important;
+  background-size: 140% 140%, 150% 150%, 120% 120%;
+  animation: home-gradient-drift 18s ease-in-out infinite alternate;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+body[data-page="home"] .landing-shell {
+  width: 100%;
+  height: 100svh;
+  margin: 0;
+  padding: 0;
+}
+
+body[data-page="home"] .landing-cosmic {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  margin: 0;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Keep landing clean and minimal */
+body[data-page="home"] .scene-motion {
+  display: none;
+}
+
+body[data-page="home"] .top-nav.game-top-nav {
+  position: fixed;
+  top: 0.8rem;
+  left: 0;
+  right: 0;
+  z-index: 8;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+body[data-page="home"] .game-top-actions {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body[data-page="home"] .game-top-actions .link {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.92;
+  white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  transition: color 220ms ease, opacity 220ms ease, transform 220ms ease;
+}
+
+body[data-page="home"] .game-top-actions .link:hover {
+  color: var(--cyan);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+body[data-page="home"] .game-top-actions .link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.2rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.2);
+  transform-origin: center;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+body[data-page="home"] .game-top-actions .link:hover::after {
+  opacity: 0.85;
+  transform: scaleX(1);
+}
+
+body[data-page="home"] .hero.game-hero {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 4.8rem 0.8rem 1.6rem;
+}
+
+body[data-page="home"] .hero-copy {
+  width: min(860px, 100%);
+  margin: 0 auto;
+  padding: 0.9rem;
+  transform: translateY(-2.5vh);
+}
+
+body[data-page="home"] .game-title {
+  /* Centered title with equal spacing and simple reveal animation */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.07em, 0.2vw, 0.12em);
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2.8rem, 9vw, 6.4rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+body[data-page="home"] .hero-title-actions {
+  justify-content: center;
+  margin-top: 0.92rem;
+  animation: cta-reveal 820ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+body[data-page="home"] .start-journey-btn {
+  min-height: 46px;
+  border-radius: 12px;
+  padding: 0.58rem 1rem;
+  border: 1px solid rgba(172, 186, 255, 0.32);
+  background: linear-gradient(160deg, rgba(55, 63, 117, 0.92), rgba(40, 48, 94, 0.9));
+  color: #eef3ff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+
+body[data-page="home"] .start-journey-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(10, 14, 35, 0.38);
+}
+
+body.auth-modal-open {
+  overflow: hidden;
+}
+
+body[data-page="home"] .home-auth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+body[data-page="home"] .home-auth-modal[hidden] {
+  display: none !important;
+}
+
+body[data-page="home"] .home-auth-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(8, 12, 30, 0.62);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+body[data-page="home"] .home-auth-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1080px, 97vw);
+}
+
+body[data-page="home"] .home-auth-panel[hidden] {
+  display: none !important;
+}
+
+body[data-page="home"] .start-journey-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.16) 46%,
+    rgba(255, 255, 255, 0) 72%
+  );
+  transform: translateX(-130%);
+}
+
+body[data-page="home"] .start-journey-btn:hover::before {
+  animation: cta-sheen 620ms ease;
+}
+
+body[data-page="home"] .game-title .title-letter {
+  display: inline-block;
+}
+
+body[data-page="home"] .game-title .title-glyph {
+  display: inline-block;
+  color: var(--ink);
+  animation: soft-letter-jump 620ms ease-in-out both;
+  animation-delay: var(--delay);
+  animation-play-state: paused;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  body[data-page="home"] .game-title .title-glyph {
+    background: linear-gradient(120deg, #f3f7ff 0%, #9dd7ff 48%, #c6b8ff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+body[data-page="home"] .game-title.title-animate .title-glyph {
+  animation-play-state: running;
+}
+
+body[data-page="home"] .game-title.title-animate {
+  animation: title-breathe 7.5s ease-in-out infinite;
+}
+
+html.touch-ui body[data-page="home"] .game-top-actions .link,
+html.touch-ui body[data-page="home"] .start-journey-btn {
+  min-height: 44px;
+}
+
+html.low-end body[data-page="home"] {
+  background: linear-gradient(165deg, var(--bg), var(--bg-2)) !important;
+}
+
+html.low-end body[data-page="home"] .top-nav.game-top-nav {
+  position: static;
+  padding-top: 0.55rem;
+}
+
+html.low-end body[data-page="home"] .hero.game-hero {
+  padding-top: 2.2rem;
+}
+
+html.low-end body[data-page="home"] .start-journey-btn {
+  transition: none;
+  box-shadow: none;
+}
+
+html.low-end body[data-page="home"] #credit-splash {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(6, 12, 18, 0.96);
+}
+
+html.low-end body[data-page="home"] .home-auth-backdrop {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (min-width: 1024px) {
+  html:not(.low-end) body[data-page="home"] .landing-cosmic::before,
+  html:not(.low-end) body[data-page="home"] .landing-cosmic::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 1;
+    filter: blur(10px);
+  }
+
+  html:not(.low-end) body[data-page="home"] .landing-cosmic::before {
+    width: min(460px, 36vw);
+    height: min(460px, 36vw);
+    left: -10%;
+    top: -12%;
+    background: radial-gradient(circle, rgba(130, 217, 255, 0.18), transparent 70%);
+    animation: orb-float-a 10.5s ease-in-out infinite;
+  }
+
+  html:not(.low-end) body[data-page="home"] .landing-cosmic::after {
+    width: min(520px, 40vw);
+    height: min(520px, 40vw);
+    right: -14%;
+    bottom: -18%;
+    background: radial-gradient(circle, rgba(154, 135, 255, 0.16), transparent 72%);
+    animation: orb-float-b 12.5s ease-in-out infinite;
+  }
+
+  html:not(.low-end) body[data-page="home"] .scene-motion {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  html:not(.low-end) body[data-page="home"] .scene-aurora {
+    background:
+      radial-gradient(50% 65% at 18% 22%, rgba(130, 217, 255, 0.18), transparent 72%),
+      radial-gradient(56% 70% at 82% 24%, rgba(154, 135, 255, 0.16), transparent 74%);
+    animation: home-aurora 11s ease-in-out infinite alternate;
+  }
+
+  html:not(.low-end) body[data-page="home"] .scene-mist {
+    inset: auto -14% -16% -14%;
+    height: 44%;
+    filter: blur(10px);
+    background:
+      radial-gradient(50% 90% at 26% 72%, rgba(130, 217, 255, 0.16), transparent 72%),
+      radial-gradient(54% 92% at 74% 68%, rgba(154, 135, 255, 0.13), transparent 74%);
+    animation: home-mist 8.5s ease-in-out infinite alternate;
+  }
+
+  html:not(.low-end) body[data-page="home"] .scene-glint {
+    background-image:
+      radial-gradient(2px 2px at 8% 18%, rgba(212, 232, 255, 0.44), transparent 60%),
+      radial-gradient(2px 2px at 28% 36%, rgba(212, 232, 255, 0.28), transparent 60%),
+      radial-gradient(2px 2px at 64% 20%, rgba(212, 232, 255, 0.36), transparent 60%),
+      radial-gradient(2px 2px at 86% 34%, rgba(212, 232, 255, 0.26), transparent 60%);
+    opacity: 0.5;
+    animation: home-glint 14s linear infinite;
+  }
+
+  html:not(.low-end) body[data-page="home"] .hero-copy {
+    border: 1px solid rgba(168, 180, 255, 0.18);
+    border-radius: 20px;
+    background: linear-gradient(170deg, rgba(21, 27, 60, 0.44), rgba(18, 24, 54, 0.4));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 20px 42px rgba(7, 10, 28, 0.34);
+    animation: hero-float 6s ease-in-out infinite;
+  }
+
+  html:not(.low-end) body[data-page="home"] .game-title {
+    text-shadow: 0 12px 28px rgba(9, 13, 34, 0.44), 0 0 22px rgba(130, 217, 255, 0.2);
+  }
+}
+
+@keyframes soft-letter-jump {
+  0%   { transform: translateY(0); }
+  40%  { transform: translateY(-0.11em); }
+  68%  { transform: translateY(0.03em); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes title-breathe {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.01);
+  }
+}
+
+@keyframes home-gradient-drift {
+  0% {
+    background-position: 0% 0%, 100% 100%, 0% 0%;
+  }
+  100% {
+    background-position: 8% 5%, 92% 96%, 3% 2%;
+  }
+}
+
+@keyframes cta-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cta-sheen {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes home-aurora {
+  from { transform: translate3d(-2%, 1%, 0) scale(1); }
+  to { transform: translate3d(2%, -1%, 0) scale(1.06); }
+}
+
+@keyframes home-mist {
+  from { transform: translate3d(-3%, 1%, 0); }
+  to { transform: translate3d(3%, -1.5%, 0); }
+}
+
+@keyframes home-glint {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(5%, 0, 0); }
+}
+
+@keyframes orb-float-a {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-16px) translateX(8px); }
+}
+
+@keyframes orb-float-b {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(14px) translateX(-10px); }
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+
+@media (max-width: 920px) {
+  body[data-page="home"] .top-nav.game-top-nav {
+    top: 0.55rem;
+    padding: 0 0.55rem;
+  }
+
+  body[data-page="home"] .game-top-actions {
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  body[data-page="home"] .game-top-actions .link {
+    font-size: 0.78rem;
+  }
+
+  body[data-page="home"] .game-title {
+    font-size: clamp(2.45rem, 12vw, 4.2rem);
+  }
+
+  body[data-page="home"] .hero-copy {
+    transform: translateY(-1.8vh);
+  }
+
+}
+
+@media (max-width: 560px) {
+  body[data-page="home"] .landing-cosmic {
+    padding-inline: 0.65rem;
+  }
+
+  body[data-page="home"] .top-nav.game-top-nav {
+    top: 0.35rem;
+    padding-inline: 0.35rem;
+  }
+
+  body[data-page="home"] .game-top-actions {
+    gap: 0.35rem 0.55rem;
+  }
+
+  body[data-page="home"] .game-top-actions .link {
+    font-size: 0.75rem;
+  }
+
+  body[data-page="home"] .hero.game-hero {
+    padding-top: 4.2rem;
+  }
+
+  body[data-page="home"] .start-journey-btn {
+    width: min(88vw, 280px);
+  }
+
+  body[data-page="home"] .home-auth-modal {
+    padding: 0.35rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"] {
+    animation: none !important;
+  }
+
+  body[data-page="home"] .game-title,
+  body[data-page="home"] .hero-title-actions,
+  body[data-page="home"] .start-journey-btn {
+    transition: none;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  body[data-page="home"] .start-journey-btn::before,
+  body[data-page="home"] .game-title .title-glyph,
+  body[data-page="home"] .game-top-actions .link::after,
+  body[data-page="home"] .landing-cosmic::before,
+  body[data-page="home"] .landing-cosmic::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* Pastel Background System: unified soft game-style look */
+body[data-page="home"],
+body[data-theme="light"][data-page="home"] {
+  --home-text: var(--ink);
+  --home-text-soft: var(--muted);
+  --home-line: var(--surface-border);
+  --home-btn-bg: linear-gradient(150deg, var(--interactive-2), var(--interactive-1));
+  --home-btn-ink: var(--interactive-text);
+  background:
+    radial-gradient(74% 78% at 8% 10%, color-mix(in srgb, var(--theme-light) 70%, white 30%), transparent 74%),
+    radial-gradient(82% 74% at 86% 16%, color-mix(in srgb, var(--theme-accent) 46%, transparent), transparent 76%),
+    radial-gradient(72% 72% at 28% 86%, color-mix(in srgb, var(--theme-base) 38%, transparent), transparent 74%),
+    linear-gradient(158deg, var(--bg) 0%, var(--bg-2) 100%) !important;
+  background-size: 120% 120%, 130% 130%, 140% 140%, 115% 115%;
+  animation: pastel-gradient-drift 28s ease-in-out infinite alternate !important;
+}
+
+body[data-page="home"] .landing-cosmic {
+  background: transparent !important;
+}
+
+body[data-page="home"] .landing-cosmic::before,
+body[data-page="home"] .landing-cosmic::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 48% 52% 58% 42% / 42% 55% 45% 58%;
+  will-change: transform, opacity;
+}
+
+body[data-page="home"] .landing-cosmic::before {
+  width: min(36vw, 460px);
+  height: min(36vw, 460px);
+  top: -12%;
+  left: -8%;
+  background:
+    radial-gradient(circle at 30% 34%, color-mix(in srgb, var(--theme-light) 62%, white 38%), color-mix(in srgb, var(--theme-light) 32%, transparent) 58%, transparent 78%);
+  box-shadow: 0 0 70px color-mix(in srgb, var(--theme-light) 52%, transparent);
+  animation: blob-float-a 19s ease-in-out infinite;
+}
+
+body[data-page="home"] .landing-cosmic::after {
+  width: min(40vw, 520px);
+  height: min(40vw, 520px);
+  right: -10%;
+  bottom: -16%;
+  background:
+    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--theme-base) 34%, white 66%), color-mix(in srgb, var(--theme-base) 22%, transparent) 62%, transparent 80%);
+  box-shadow: 0 0 84px color-mix(in srgb, var(--theme-base) 35%, transparent);
+  animation: blob-float-b 23s ease-in-out infinite;
+}
+
+body[data-page="home"] .scene-motion {
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+body[data-page="home"] .scene-aurora {
+  background:
+    radial-gradient(45% 62% at 22% 28%, color-mix(in srgb, var(--theme-accent) 42%, transparent), transparent 72%),
+    radial-gradient(48% 66% at 78% 34%, color-mix(in srgb, var(--theme-light) 40%, transparent), transparent 74%);
+  mix-blend-mode: soft-light;
+  will-change: transform, opacity;
+  animation: aurora-soft-drift 24s ease-in-out infinite alternate;
+}
+
+body[data-page="home"] .scene-mist {
+  inset: auto -16% -18% -16%;
+  height: 48%;
+  filter: blur(12px);
+  background:
+    radial-gradient(44% 88% at 28% 66%, color-mix(in srgb, var(--theme-light) 36%, transparent), transparent 74%),
+    radial-gradient(48% 92% at 72% 68%, color-mix(in srgb, var(--theme-base) 30%, transparent), transparent 76%);
+  will-change: transform, opacity;
+  animation: mist-soft-drift 20s ease-in-out infinite alternate;
+}
+
+body[data-page="home"] .scene-glint {
+  opacity: 0.52;
+}
+
+body[data-page="home"] .scene-glint::before,
+body[data-page="home"] .scene-glint::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  will-change: transform, opacity;
+}
+
+body[data-page="home"] .scene-glint::before {
+  background-image:
+    radial-gradient(circle at center, color-mix(in srgb, var(--theme-light) 68%, white 32%) 0 1px, transparent 1.2px);
+  background-size: 110px 110px;
+  opacity: 0.34;
+  animation: particles-a 30s linear infinite;
+}
+
+body[data-page="home"] .scene-glint::after {
+  background-image:
+    radial-gradient(circle at center, color-mix(in srgb, var(--theme-base) 42%, white 58%) 0 0.9px, transparent 1.1px);
+  background-size: 84px 84px;
+  opacity: 0.28;
+  animation: particles-b 22s linear infinite;
+}
+
+body[data-page="home"] .top-nav.game-top-nav,
+body[data-page="home"] .hero.game-hero {
+  position: relative;
+  z-index: 4;
+}
+
+body[data-page="home"] .game-top-actions {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0;
+  padding: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body[data-page="home"] .game-top-actions .link {
+  color: var(--home-text);
+  -webkit-text-fill-color: currentColor;
+}
+
+body[data-page="home"] .game-top-actions .link:hover {
+  color: transparent;
+  background: linear-gradient(120deg, var(--hero-title-from) 0%, var(--hero-title-mid) 48%, var(--hero-title-to) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body[data-page="home"] .game-title {
+  color: var(--home-text);
+}
+
+body[data-page="home"] .game-title .title-glyph {
+  color: var(--home-text);
+}
+
+body[data-page="home"] .start-journey-btn {
+  background: var(--home-btn-bg);
+  color: var(--home-btn-ink);
+  border-color: var(--home-line);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--theme-dark) 28%, transparent);
+}
+
+@media (max-width: 920px) {
+  body[data-page="home"] .landing-cosmic::before {
+    width: min(56vw, 320px);
+    height: min(56vw, 320px);
+  }
+
+  body[data-page="home"] .landing-cosmic::after {
+    width: min(62vw, 360px);
+    height: min(62vw, 360px);
+  }
+
+  body[data-page="home"] .scene-mist {
+    inset: auto -26% -20% -26%;
+    height: 40%;
+    filter: blur(9px);
+  }
+}
+
+@keyframes pastel-gradient-drift {
+  0% {
+    background-position: 0% 0%, 100% 100%, 0% 100%, 0% 0%;
+  }
+  100% {
+    background-position: 6% 4%, 94% 96%, 4% 94%, 3% 2%;
+  }
+}
+
+@keyframes blob-float-a {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 0.92; }
+  50% { transform: translate3d(14px, -16px, 0) rotate(6deg) scale(1.04); opacity: 0.82; }
+}
+
+@keyframes blob-float-b {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 0.88; }
+  50% { transform: translate3d(-12px, 14px, 0) rotate(-5deg) scale(1.05); opacity: 0.8; }
+}
+
+@keyframes aurora-soft-drift {
+  0% { transform: translate3d(-2%, 1%, 0) scale(1.02); opacity: 0.42; }
+  100% { transform: translate3d(2%, -1%, 0) scale(1.08); opacity: 0.55; }
+}
+
+@keyframes mist-soft-drift {
+  0% { transform: translate3d(-2.5%, 1%, 0); opacity: 0.3; }
+  100% { transform: translate3d(2.5%, -1.2%, 0); opacity: 0.4; }
+}
+
+@keyframes particles-a {
+  0% { transform: translate3d(0, 0, 0); opacity: 0.22; }
+  50% { opacity: 0.36; }
+  100% { transform: translate3d(-40px, -42px, 0); opacity: 0.22; }
+}
+
+@keyframes particles-b {
+  0% { transform: translate3d(0, 0, 0); opacity: 0.18; }
+  50% { opacity: 0.3; }
+  100% { transform: translate3d(34px, -28px, 0); opacity: 0.18; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="home"],
+  body[data-page="home"] .landing-cosmic::before,
+  body[data-page="home"] .landing-cosmic::after,
+  body[data-page="home"] .scene-aurora,
+  body[data-page="home"] .scene-mist,
+  body[data-page="home"] .scene-glint::before,
+  body[data-page="home"] .scene-glint::after {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Theme palette overrides for home */
+body[data-page="home"] {
+  --home-text: var(--ink);
+  --home-text-soft: var(--muted);
+  --home-line: var(--surface-border);
+  --home-btn-bg: linear-gradient(150deg, var(--interactive-2), var(--interactive-1));
+  --home-btn-ink: var(--interactive-text);
+  background:
+    radial-gradient(74% 78% at 8% 10%, color-mix(in srgb, var(--theme-light) 70%, white 30%), transparent 72%),
+    radial-gradient(82% 74% at 86% 16%, color-mix(in srgb, var(--theme-accent) 58%, transparent), transparent 74%),
+    radial-gradient(72% 72% at 28% 86%, color-mix(in srgb, var(--theme-base) 44%, transparent), transparent 72%),
+    linear-gradient(160deg, var(--bg) 0%, var(--bg-2) 100%) !important;
+}
+
+body[data-page="home"] .landing-cosmic::before {
+  background:
+    radial-gradient(circle at 30% 34%, color-mix(in srgb, var(--theme-light) 62%, white 38%), color-mix(in srgb, var(--theme-light) 32%, transparent) 58%, transparent 78%);
+  box-shadow: 0 0 70px color-mix(in srgb, var(--theme-light) 52%, transparent);
+}
+
+body[data-page="home"] .landing-cosmic::after {
+  background:
+    radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--theme-base) 34%, white 66%), color-mix(in srgb, var(--theme-base) 22%, transparent) 62%, transparent 80%);
+  box-shadow: 0 0 84px color-mix(in srgb, var(--theme-base) 35%, transparent);
+}
+
+body[data-page="home"] .scene-aurora {
+  background:
+    radial-gradient(45% 62% at 22% 28%, color-mix(in srgb, var(--theme-accent) 42%, transparent), transparent 72%),
+    radial-gradient(48% 66% at 78% 34%, color-mix(in srgb, var(--theme-light) 40%, transparent), transparent 74%);
+}
+
+body[data-page="home"] .scene-mist {
+  background:
+    radial-gradient(44% 88% at 28% 66%, color-mix(in srgb, var(--theme-light) 36%, transparent), transparent 74%),
+    radial-gradient(48% 92% at 72% 68%, color-mix(in srgb, var(--theme-base) 30%, transparent), transparent 76%);
+}
+
+body[data-page="home"] .game-top-actions .link:hover {
+  color: transparent;
+  background: linear-gradient(120deg, var(--hero-title-from) 0%, var(--hero-title-mid) 48%, var(--hero-title-to) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

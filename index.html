@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Intro</title>
+  <style>
+    :root {
+      --bg-a: #081422;
+      --bg-b: #10263f;
+      --line: rgba(170, 214, 255, 0.28);
+      --text: #edf6ff;
+      --muted: #b7d3ec;
+      --accent: #44e0ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Poppins", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 14%, rgba(68, 224, 255, 0.2), transparent 34%),
+        radial-gradient(circle at 82% 80%, rgba(168, 114, 255, 0.22), transparent 36%),
+        linear-gradient(155deg, var(--bg-a), var(--bg-b));
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .intro {
+      width: min(780px, 92vw);
+      padding: clamp(1.4rem, 4vw, 2.4rem);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(20, 43, 70, 0.72), rgba(12, 29, 50, 0.8));
+      backdrop-filter: blur(8px);
+      box-shadow: 0 20px 50px rgba(5, 10, 20, 0.45);
+      text-align: center;
+      animation: intro-in 700ms ease both;
+    }
+
+    .badge {
+      margin: 0 auto 0.9rem;
+      width: fit-content;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(68, 224, 255, 0.45);
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3.1vw, 2rem);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
+    }
+
+    p {
+      margin: 0.9rem 0 1.1rem;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .loader {
+      height: 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(145, 206, 255, 0.35);
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .loader > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6ed8ff, #91f2ff);
+      animation: load 1900ms ease forwards;
+    }
+
+    .hint {
+      margin-top: 0.7rem;
+      font-size: 0.82rem;
+      color: rgba(199, 225, 250, 0.9);
+    }
+
+    @keyframes load {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes intro-in {
+      from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="intro" role="status" aria-live="polite">
+    <p class="badge">Quizionix</p>
+    <h1>Developed by Charles Bolivar and his team</h1>
+    <p>Preparing your learning world...</p>
+    <div class="loader"><span aria-hidden="true"></span></div>
+    <p class="hint">Launching in a moment</p>
+  </main>
+
+  <script>
+    window.setTimeout(() => {
+      window.location.href = "frontpage.html";
+    }, 2200);
+  </script>
+</body>
+</html>
+

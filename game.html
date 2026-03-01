@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Game</title>
+  <link rel="stylesheet" href="assets/css/base.css?v=7" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/unified-theme.css?v=1" />
+  <link rel="stylesheet" href="assets/css/game.css?v=2" />
+</head>
+<body data-page="game">
+  <main class="page game-shell">
+    <header class="card hud-bar">
+      <p>Zone: <span id="g-zone">Zone 1</span></p>
+      <p>Branch: <span id="g-branch">Branch 1</span></p>
+      <p>Difficulty: <span id="g-difficulty">Beginner</span></p>
+      <p>Mastery: <span id="g-mastery">0%</span></p>
+      <p>Knowledge Health: <span id="g-kh">100</span></p>
+    </header>
+
+    <section class="card play-panel">
+      <div class="row">
+        <button id="branch-btn" class="btn" type="button">Branch Select</button>
+        <button id="boss-btn" class="btn" type="button">Boss Node</button>
+        <a class="btn" href="dashboard.html">Back to Dashboard</a>
+      </div>
+
+      <h1 id="q-title">Challenge</h1>
+      <p id="q-text">Loading question...</p>
+      <div id="answer-options" class="answers"></div>
+      <div class="game-actions">
+        <button class="btn" id="prev-btn" type="button">Previous</button>
+        <button class="btn primary" id="submit-btn" type="button">Submit</button>
+        <button class="btn" id="next-btn" type="button">Next</button>
+      </div>
+      <div class="meter"><span id="question-progress"></span></div>
+      <p id="feedback" class="msg"></p>
+      <p id="hint" class="muted">Hint appears here after incorrect attempts.</p>
+      <p id="points" class="muted">Points: 0</p>
+    </section>
+  </main>
+  <script type="module" src="assets/js/app.js?v=4"></script>
+</body>
+</html>
+

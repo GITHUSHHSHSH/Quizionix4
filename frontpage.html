@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizionix | Home</title>
+  <link rel="preload" href="assets/sfx/background/landing%20page%20background.mp3" as="audio" />
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const classes = [];
+      const isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+      const lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2;
+      const lowCpu = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 4;
+
+      if (isTouch) classes.push("touch-ui");
+      if (reducedMotion || saveData || lowMemory || lowCpu) classes.push("low-end");
+      if (classes.length) html.classList.add(...classes);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/base.css?v=7" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/unified-theme.css?v=2" />
+  <link rel="stylesheet" href="assets/css/frontpage.css?v=25" />
+</head>
+<body data-page="home">
+  <div id="credit-splash" class="site-loader" role="status" aria-live="polite">
+    <p class="credit-splash-text">Developed by Charles Bolivar and his team</p>
+  </div>
+
+  <main class="page landing-shell">
+    <section class="landing-cosmic card glow">
+      <div class="scene-motion scene-aurora" aria-hidden="true"></div>
+      <div class="scene-motion scene-mist" aria-hidden="true"></div>
+      <div class="scene-motion scene-glint" aria-hidden="true"></div>
+      <header class="top-nav game-top-nav">
+        <nav class="row game-top-actions" aria-label="Primary Navigation">
+          <a href="frontpage.html" class="link">Home</a>
+          <a href="#signin" class="link" data-open-auth="signin">Sign In</a>
+          <a href="#signup" class="link" data-open-auth="signup">Create Account</a>
+        </nav>
+      </header>
+
+      <section class="hero game-hero">
+        <div class="hero-copy">
+          <h2 id="hero-title" class="game-title" data-text="Quizionix" aria-label="Quizionix">Quizionix</h2>
+          <div class="row hero-title-actions">
+            <a class="btn cta-pink start-journey-btn" href="#signin" data-open-auth="signin">Start Journey</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="home-auth-modal" class="home-auth-modal" hidden aria-label="Authentication panel" role="dialog" aria-modal="true">
+        <button class="home-auth-backdrop" data-auth-close type="button" aria-label="Close authentication panel"></button>
+        <div class="home-auth-shell auth-card auth-split card glow">
+          <aside class="auth-visual" aria-hidden="true">
+            <div class="auth-visual-fallback"></div>
+          </aside>
+
+          <section id="home-signin-panel" class="auth-content home-auth-panel">
+            <button class="icon-back" data-auth-close type="button" aria-label="Back to landing"></button>
+            <h1>Sign In</h1>
+            <p class="muted">Please use your Fatima School email.</p>
+            <form id="login-form" class="form">
+              <label>Email<input id="login-email" type="email" required /></label>
+              <label>Password</label>
+              <span class="input-with-icon">
+                <input id="login-password" type="password" required />
+                <button id="toggle-login-password" class="icon-eye" type="button" aria-label="Show or hide password">&#128065;</button>
+              </span>
+              <button class="btn primary" type="submit">Sign In</button>
+            </form>
+            <div class="row auth-links-row">
+              <a class="link" href="#" id="forgot-password">Forgot password?</a>
+              <a class="link" href="#signup" data-switch-auth="signup">Don't have an account? Create one</a>
+            </div>
+            <p id="login-msg" class="msg"></p>
+          </section>
+
+          <section id="home-signup-panel" class="auth-content home-auth-panel" hidden>
+            <button class="icon-back" data-auth-close type="button" aria-label="Back to landing"></button>
+            <h1>Create Account</h1>
+            <p class="muted">Please use your Fatima School email.</p>
+            <form id="register-form" class="form">
+              <label>Name<input id="reg-name" type="text" required /></label>
+              <label>Email<input id="reg-email" type="email" required /></label>
+              <label>Password</label>
+              <span class="input-with-icon">
+                <input id="reg-password" type="password" minlength="6" required />
+                <button id="toggle-reg-password" class="icon-eye" type="button" aria-label="Show or hide password">&#128065;</button>
+              </span>
+              <label>Confirm Password</label>
+              <span class="input-with-icon">
+                <input id="reg-confirm-password" type="password" minlength="6" required />
+                <button id="toggle-reg-confirm" class="icon-eye" type="button" aria-label="Show or hide confirm password">&#128065;</button>
+              </span>
+              <button class="btn primary" type="submit">Sign Up</button>
+            </form>
+            <div class="row auth-links-row">
+              <span class="muted">Already have an account?</span>
+              <a class="link" href="#signin" data-switch-auth="signin">Sign In</a>
+            </div>
+            <p id="register-msg" class="msg"></p>
+          </section>
+        </div>
+      </section>
+
+    </section>
+  </main>
+  <script>
+    (function () {
+      const splash = document.getElementById("credit-splash");
+      if (!splash) return;
+      document.body.classList.add("splash-active");
+
+      const lowEnd = document.documentElement.classList.contains("low-end");
+      const splashDurationMs = lowEnd ? 900 : 2200;
+      const fadeMs = lowEnd ? 160 : 320;
+      window.setTimeout(() => {
+        splash.style.opacity = "0";
+        splash.style.pointerEvents = "none";
+        window.setTimeout(() => {
+          document.body.classList.remove("splash-active");
+          splash.remove();
+          window.dispatchEvent(new Event("home-splash-done"));
+        }, fadeMs);
+      }, splashDurationMs);
+    })();
+  </script>
+  <script>
+    (function () {
+      const title = document.getElementById("hero-title");
+      if (!title) return;
+
+      const text = (title.dataset.text || "Quizionix").trim() || "Quizionix";
+      const chars = Array.from(text);
+
+      // Build a clean, evenly-spaced title animation.
+      title.textContent = "";
+      chars.forEach((char, index) => {
+        const letter = document.createElement("span");
+        letter.className = "title-letter";
+
+        const glyph = document.createElement("span");
+        glyph.className = "title-glyph";
+        glyph.style.setProperty("--delay", `${index * 48}ms`);
+        glyph.textContent = char;
+
+        letter.appendChild(glyph);
+        title.appendChild(letter);
+      });
+
+      const startTitleAnimation = () => {
+        title.classList.remove("title-animate");
+        // Reflow to restart keyframes reliably.
+        void title.offsetWidth;
+        title.classList.add("title-animate");
+      };
+
+      if (document.getElementById("credit-splash")) {
+        window.addEventListener("home-splash-done", startTitleAnimation, { once: true });
+      } else {
+        startTitleAnimation();
+      }
+    })();
+  </script>
+  <script type="module" src="assets/js/app.js?v=4"></script>
+</body>
+</html>
+

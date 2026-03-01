@@ -1,0 +1,101 @@
+:root {
+  --qz-bg-deep: var(--bg);
+  --qz-bg-mid: var(--bg-2);
+  --qz-bg-soft: var(--surface-3);
+  --qz-line: var(--surface-border);
+  --qz-text: var(--ink);
+  --qz-text-soft: var(--muted);
+}
+
+body[data-page] {
+  color: var(--qz-text);
+}
+
+body[data-page] .card {
+  border-color: var(--qz-line);
+}
+
+body[data-page] .muted {
+  color: var(--qz-text-soft);
+}
+
+body[data-page="home"] .top-nav,
+body[data-page="dashboard"] .dash-left,
+body[data-page="dashboard"] .dash-right,
+body[data-page="game"] .hud-bar,
+body[data-page="progress"] .top-nav {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body[data-page="login"],
+body[data-page="register"] {
+  background:
+    radial-gradient(circle at 12% 16%, var(--bg-glow-a), transparent 34%),
+    radial-gradient(circle at 84% 84%, var(--bg-glow-b), transparent 38%),
+    linear-gradient(165deg, var(--qz-bg-deep), var(--qz-bg-mid));
+}
+
+body[data-page="login"] .auth-split,
+body[data-page="register"] .auth-split {
+  border: 1px solid var(--qz-line);
+  background: linear-gradient(165deg, var(--surface-1), var(--surface-2));
+}
+
+body[data-page="dashboard"] .dashboard-shell::before {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface-3));
+}
+
+body[data-page="dashboard"] .dash-search {
+  width: 100%;
+  display: block;
+  padding: 0 0.95rem;
+}
+
+body[data-page="dashboard"] .dash-search::placeholder {
+  color: color-mix(in srgb, var(--muted) 78%, white 22%);
+}
+
+body[data-page="game"] {
+  background:
+    radial-gradient(circle at 14% 20%, var(--bg-glow-a), transparent 34%),
+    linear-gradient(165deg, var(--qz-bg-deep), var(--qz-bg-mid));
+}
+
+body[data-page="game"] .play-panel {
+  background: linear-gradient(165deg, var(--surface-1), var(--surface-2));
+}
+
+body[data-page="progress"] {
+  background:
+    radial-gradient(circle at 84% 82%, var(--bg-glow-b), transparent 38%),
+    linear-gradient(165deg, var(--qz-bg-deep), var(--qz-bg-mid));
+}
+
+body[data-page="result"] {
+  background:
+    radial-gradient(circle at 16% 14%, var(--bg-glow-a), transparent 36%),
+    linear-gradient(165deg, var(--qz-bg-deep), var(--qz-bg-mid));
+}
+
+body[data-page="progress"] .card,
+body[data-page="result"] .card,
+body[data-page="game"] .card {
+  background: linear-gradient(170deg, var(--surface-1), var(--surface-2));
+}
+
+body[data-page="progress"] .btn,
+body[data-page="result"] .btn,
+body[data-page="game"] .btn,
+body[data-page="dashboard"] .btn {
+  border-color: var(--qz-line);
+  background: linear-gradient(160deg, var(--interactive-1), var(--interactive-2));
+}
+
+body[data-page="progress"] .btn.primary,
+body[data-page="result"] .btn.primary,
+body[data-page="game"] .btn.primary,
+body[data-page="dashboard"] .btn.primary {
+  background: linear-gradient(145deg, var(--interactive-2), var(--interactive-1));
+  color: var(--interactive-text);
+}
