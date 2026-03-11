@@ -49,7 +49,7 @@
   font: inherit;
   font-weight: 700;
   text-align: left;
-  cursor: pointer;
+  cursor: url("../media/icons/cursor-hover-32.png") 1 1, pointer;
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 

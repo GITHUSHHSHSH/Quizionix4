@@ -6,12 +6,15 @@
   <title>Quizionix | Intro</title>
   <style>
     :root {
+      --load-duration: 6200ms;
       --bg-a: #081422;
       --bg-b: #10263f;
       --line: rgba(170, 214, 255, 0.28);
       --text: #edf6ff;
       --muted: #b7d3ec;
-      --accent: #44e0ff;
+      --accent-a: #6ed8ff;
+      --accent-b: #91f2ff;
+      --accent-glow: rgba(110, 216, 255, 0.3);
     }
 
     * {
@@ -21,62 +24,134 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Segoe UI", "Poppins", sans-serif;
+      font-family: "Poppins", "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 18% 14%, rgba(68, 224, 255, 0.2), transparent 34%),
-        radial-gradient(circle at 82% 80%, rgba(168, 114, 255, 0.22), transparent 36%),
+        radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 44%),
+        radial-gradient(circle at 18% 14%, color-mix(in srgb, var(--accent-a) 42%, transparent), transparent 34%),
+        radial-gradient(circle at 82% 80%, color-mix(in srgb, var(--accent-b) 34%, transparent), transparent 36%),
         linear-gradient(155deg, var(--bg-a), var(--bg-b));
+      background-size: 130% 130%, 130% 130%, 140% 140%, 120% 120%;
       display: grid;
       place-items: center;
       overflow: hidden;
+      animation: page-drift var(--load-duration) linear forwards;
+    }
+
+    body[data-theme="pink"] {
+      --accent-a: #f59fd5;
+      --accent-b: #ffc7e9;
+      --accent-glow: rgba(245, 159, 213, 0.28);
+    }
+
+    body[data-theme="milktea"] {
+      --accent-a: #d6b9a0;
+      --accent-b: #ead8c8;
+      --accent-glow: rgba(214, 185, 160, 0.28);
     }
 
     .intro {
-      width: min(780px, 92vw);
-      padding: clamp(1.4rem, 4vw, 2.4rem);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(20, 43, 70, 0.72), rgba(12, 29, 50, 0.8));
-      backdrop-filter: blur(8px);
-      box-shadow: 0 20px 50px rgba(5, 10, 20, 0.45);
-      text-align: center;
+      width: min(620px, 90vw);
+      padding: clamp(1rem, 3.6vw, 1.6rem);
+      display: grid;
+      gap: 0.72rem;
+      justify-items: center;
       animation: intro-in 700ms ease both;
+      position: relative;
     }
 
-    .badge {
-      margin: 0 auto 0.9rem;
-      width: fit-content;
-      padding: 0.35rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(68, 224, 255, 0.45);
-      color: var(--accent);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
+    .load-status {
+      margin: 0;
+      min-height: 1.35rem;
+      font-size: clamp(0.86rem, 1.8vw, 1rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      font-weight: 700;
+      color: color-mix(in srgb, var(--accent-b) 82%, white 18%);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 260ms ease, transform 260ms ease, filter 260ms ease;
+      filter: blur(4px);
+      text-shadow: 0 0 18px color-mix(in srgb, var(--accent-glow) 74%, transparent);
+    }
+
+    .load-status.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .load-status.is-switching {
+      opacity: 0;
+      transform: translateY(-8px);
+      filter: blur(4px);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.25rem, 3.1vw, 2rem);
-      line-height: 1.3;
-      letter-spacing: 0.02em;
-      text-wrap: balance;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      font-size: clamp(0.92rem, 2.9vw, 2.1rem);
+      line-height: 1.28;
+      letter-spacing: 0.015em;
+      text-wrap: nowrap;
+      white-space: nowrap;
+      background: linear-gradient(
+        95deg,
+        color-mix(in srgb, var(--accent-a) 76%, white 24%) 0%,
+        color-mix(in srgb, var(--accent-b) 84%, white 16%) 44%,
+        color-mix(in srgb, var(--accent-a) 72%, black 28%) 100%
+      );
+      background-size: 220% 220%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 16px color-mix(in srgb, var(--accent-glow) 72%, transparent);
+      opacity: 0;
+      transform: translateX(-28px);
+      clip-path: inset(0 100% 0 0);
+      filter: blur(6px);
+      will-change: transform, opacity, filter, clip-path;
     }
 
-    p {
-      margin: 0.9rem 0 1.1rem;
-      color: var(--muted);
-      font-size: 0.96rem;
+    body.title-ready h1 {
+      animation: title-reveal 1900ms cubic-bezier(0.2, 0.9, 0.28, 1) forwards;
+    }
+
+    .loading-ui {
+      width: 100%;
+      display: grid;
+      gap: 0.72rem;
+      justify-items: center;
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    body.loading-finished .loading-ui {
+      animation: loading-ui-out 760ms ease forwards;
     }
 
     .loader {
-      height: 9px;
+      width: min(500px, 84vw);
+      height: 10px;
       border-radius: 999px;
-      border: 1px solid rgba(145, 206, 255, 0.35);
-      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid color-mix(in srgb, var(--line) 82%, white 18%);
+      background: color-mix(in srgb, var(--bg-b) 70%, white 30%);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 18px color-mix(in srgb, var(--accent-glow) 70%, transparent);
       overflow: hidden;
+      position: relative;
+    }
+
+    .loader::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.24) 45%, transparent 100%);
+      transform: translateX(-140%);
+      animation: sheen var(--load-duration) linear forwards;
     }
 
     .loader > span {
@@ -84,19 +159,32 @@
       height: 100%;
       width: 0;
       border-radius: inherit;
-      background: linear-gradient(90deg, #6ed8ff, #91f2ff);
-      animation: load 1900ms ease forwards;
+      background: linear-gradient(100deg, var(--accent-a) 0%, color-mix(in srgb, var(--accent-b) 72%, white 28%) 46%, var(--accent-a) 100%);
+      background-size: 220% 220%;
+      box-shadow: 0 0 16px var(--accent-glow);
+      animation: load var(--load-duration) cubic-bezier(0.2, 1, 0.3, 1) forwards, loader-gradient-shift var(--load-duration) linear forwards;
     }
 
-    .hint {
-      margin-top: 0.7rem;
-      font-size: 0.82rem;
-      color: rgba(199, 225, 250, 0.9);
+    .loader-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0.15rem auto 0;
+      border-radius: 50%;
+      border: 2.5px solid color-mix(in srgb, var(--accent-a) 46%, transparent);
+      border-top-color: color-mix(in srgb, var(--accent-b) 84%, white 16%);
+      border-right-color: color-mix(in srgb, var(--accent-a) 88%, white 12%);
+      box-shadow: 0 0 18px var(--accent-glow);
+      animation: spinner-turn var(--load-duration) linear forwards;
     }
 
     @keyframes load {
       from { width: 0; }
       to { width: 100%; }
+    }
+
+    @keyframes sheen {
+      from { transform: translateX(-140%); }
+      to { transform: translateX(140%); }
     }
 
     @keyframes intro-in {
@@ -109,21 +197,161 @@
         transform: translateY(0) scale(1);
       }
     }
+
+    @keyframes page-drift {
+      from {
+        background-position: 50% 44%, 0% 0%, 100% 100%, 0% 0%;
+      }
+      to {
+        background-position: 54% 48%, 6% 4%, 94% 97%, 2% 2%;
+      }
+    }
+
+    @keyframes loading-ui-out {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-10px);
+        filter: blur(5px);
+      }
+    }
+
+    @keyframes title-sync {
+      0% {
+        opacity: 0.55;
+        background-position: 0% 50%;
+      }
+      35% {
+        opacity: 0.9;
+        background-position: 45% 50%;
+      }
+      100% {
+        opacity: 1;
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes title-reveal {
+      0% {
+        opacity: 0;
+        transform: translateX(-28px);
+        clip-path: inset(0 100% 0 0);
+        filter: blur(6px);
+        background-position: 0% 50%;
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+        clip-path: inset(0 0 0 0);
+        filter: blur(0);
+        letter-spacing: 0.015em;
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes loader-gradient-shift {
+      from { background-position: 0% 50%; }
+      to { background-position: 100% 50%; }
+    }
+
+    @keyframes spinner-turn {
+      to { transform: rotate(2160deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .intro,
+      .loader > span,
+      .loader::after,
+      .loader-icon,
+      .load-status,
+      h1 {
+        animation: none;
+      }
+
+      .loader > span {
+        width: 100%;
+      }
+
+      body {
+        animation: none;
+      }
+
+      .load-status {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+
+      h1 {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="intro" role="status" aria-live="polite">
-    <p class="badge">Quizionix</p>
-    <h1>Developed by Charles Bolivar and his team</h1>
-    <p>Preparing your learning world...</p>
-    <div class="loader"><span aria-hidden="true"></span></div>
-    <p class="hint">Launching in a moment</p>
+    <h1 data-title="Developed by Charles Bolivar and his Team">Developed by Charles Bolivar and his Team</h1>
+    <div class="loading-ui" data-loading-ui>
+      <p class="load-status" data-load-status>Loading Assets...</p>
+      <div class="loader"><span aria-hidden="true"></span></div>
+      <div class="loader-icon" aria-hidden="true"></div>
+    </div>
   </main>
 
   <script>
+    try {
+      const savedTheme = window.localStorage.getItem("quizionix-theme");
+      if (savedTheme === "teal" || savedTheme === "pink" || savedTheme === "milktea") {
+        document.body.dataset.theme = savedTheme;
+      }
+    } catch {
+      // Ignore storage read failures.
+    }
+
+    const LOAD_DURATION_MS = 6200;
+    const statusNode = document.querySelector("[data-load-status]");
+    const loadingUi = document.querySelector("[data-loading-ui]");
+    document.documentElement.style.setProperty("--load-duration", `${LOAD_DURATION_MS}ms`);
+
+    const setStatus = (text) => {
+      if (!(statusNode instanceof HTMLElement)) return;
+      statusNode.classList.add("is-switching");
+      window.setTimeout(() => {
+        statusNode.textContent = text;
+        statusNode.classList.remove("is-switching");
+        statusNode.classList.add("is-visible");
+      }, 180);
+    };
+
+    if (statusNode instanceof HTMLElement) {
+      statusNode.classList.add("is-visible");
+    }
+    window.setTimeout(() => setStatus("Finishing..."), Math.floor(LOAD_DURATION_MS * 0.58));
+    window.setTimeout(() => setStatus("Complete"), Math.floor(LOAD_DURATION_MS * 0.84));
+    window.setTimeout(() => {
+      document.body.classList.add("loading-finished");
+      window.setTimeout(() => {
+        if (loadingUi instanceof HTMLElement) {
+          loadingUi.remove();
+        }
+        try {
+          window.sessionStorage.setItem("quizionix-bgm-unlocked-v1", "1");
+        } catch {
+          // Ignore storage write failures.
+        }
+        document.body.classList.add("title-ready");
+      }, 760);
+    }, LOAD_DURATION_MS);
+
     window.setTimeout(() => {
       window.location.href = "frontpage.html";
-    }, 2200);
+    }, LOAD_DURATION_MS + 2400);
   </script>
 </body>
 </html>

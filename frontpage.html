@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quizionix | Home</title>
-  <link rel="preload" href="assets/sfx/background/landing%20page%20background.mp3" as="audio" />
   <script>
     (function () {
       const html = document.documentElement;
@@ -21,15 +20,11 @@
     })();
   </script>
   <link rel="stylesheet" href="assets/css/base.css?v=7" />
-  <link rel="stylesheet" href="assets/css/ui.css?v=21" />
+  <link rel="stylesheet" href="assets/css/ui.css?v=22" />
   <link rel="stylesheet" href="assets/css/unified-theme.css?v=2" />
   <link rel="stylesheet" href="assets/css/frontpage.css?v=25" />
 </head>
 <body data-page="home">
-  <div id="credit-splash" class="site-loader" role="status" aria-live="polite">
-    <p class="credit-splash-text">Developed by Charles Bolivar and his team</p>
-  </div>
-
   <main class="page landing-shell">
     <section class="landing-cosmic card glow">
       <div class="scene-motion scene-aurora" aria-hidden="true"></div>
@@ -84,7 +79,7 @@
             <h1>Create Account</h1>
             <p class="muted">Please use your Fatima School email.</p>
             <form id="register-form" class="form">
-              <label>Name<input id="reg-name" type="text" required /></label>
+              <label>Username<input id="reg-name" type="text" required /></label>
               <label>Email<input id="reg-email" type="email" required /></label>
               <label>Password</label>
               <span class="input-with-icon">
@@ -109,26 +104,6 @@
 
     </section>
   </main>
-  <script>
-    (function () {
-      const splash = document.getElementById("credit-splash");
-      if (!splash) return;
-      document.body.classList.add("splash-active");
-
-      const lowEnd = document.documentElement.classList.contains("low-end");
-      const splashDurationMs = lowEnd ? 900 : 2200;
-      const fadeMs = lowEnd ? 160 : 320;
-      window.setTimeout(() => {
-        splash.style.opacity = "0";
-        splash.style.pointerEvents = "none";
-        window.setTimeout(() => {
-          document.body.classList.remove("splash-active");
-          splash.remove();
-          window.dispatchEvent(new Event("home-splash-done"));
-        }, fadeMs);
-      }, splashDurationMs);
-    })();
-  </script>
   <script>
     (function () {
       const title = document.getElementById("hero-title");
@@ -159,14 +134,10 @@
         title.classList.add("title-animate");
       };
 
-      if (document.getElementById("credit-splash")) {
-        window.addEventListener("home-splash-done", startTitleAnimation, { once: true });
-      } else {
-        startTitleAnimation();
-      }
+      startTitleAnimation();
     })();
   </script>
-  <script type="module" src="assets/js/app.js?v=4"></script>
+  <script type="module" src="assets/js/app.js?v=5"></script>
 </body>
 </html>
 

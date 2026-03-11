@@ -1,13 +1,13 @@
 import { saveState, setAuth, setPlayer } from "./state.js";
 
-const ALLOWED_EMAIL = "cgbolivar7522qc@student.fatima.edu.ph";
+const ALLOWED_EMAIL_DOMAIN = "@student.fatima.edu.ph";
 
 function normalizeEmail(email) {
   return String(email || "").trim().toLowerCase();
 }
 
 function isAllowedEmail(email) {
-  return normalizeEmail(email) === ALLOWED_EMAIL;
+  return normalizeEmail(email).endsWith(ALLOWED_EMAIL_DOMAIN);
 }
 
 function findUserByEmail(state, email) {

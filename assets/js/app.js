@@ -4,11 +4,12 @@ import { getQuestion, getQuestionCount, evaluateAnswer } from "./gameEngine.js";
 import { flashFeedback, selectAnswerButton, setMeterWidth } from "./uiEngine.js";
 
 const state = loadState();
-const ALLOWED_EMAIL = "cgbolivar7522qc@student.fatima.edu.ph";
+const ALLOWED_EMAIL_DOMAIN = "@student.fatima.edu.ph";
 const PROTECTED_PAGES = ["dashboard", "game", "progress", "result"];
 const TRANSITION_PAGES = ["index.html", "frontpage.html", "login.html", "register.html"];
 const THEME_KEY = "quizionix-theme";
 const THEME_SCHEME_KEY = "quizionix-theme-scheme";
+const REDUCE_MOTION_KEY = "quizionix-reduce-motion";
 const AUDIO_PREFS_KEY = "quizionix-audio-prefs-v1";
 const THEME_OPTIONS = [
   { value: "teal", label: "Teal", description: "Default primary palette" },
@@ -23,10 +24,11 @@ const BGM_STATE_KEY = "quizionix-bgm-state-v1";
 const BGM_UNLOCK_KEY = "quizionix-bgm-unlocked-v1";
 let currentIndex = 0;
 let selectedAnswer = "";
-let audioPrefs = { sfxEnabled: true, bgmEnabled: true };
+let audioPrefs = { sfxEnabled: true, bgmEnabled: true, bgmVolume: 100 };
 let playThemeSfx = () => {};
 let playInvalidInputSfx = () => {};
 let applyBgmPreference = () => {};
+let applyBgmVolume = () => {};
 
 function byId(id) {
   return document.getElementById(id);
@@ -36,6 +38,10 @@ function readInput(id, shouldTrim = true) {
   const element = byId(id);
   if (!(element instanceof HTMLInputElement)) return "";
   return shouldTrim ? element.value.trim() : element.value;
+}
+
+function isAllowedSchoolEmail(email) {
+  return String(email || "").trim().toLowerCase().endsWith(ALLOWED_EMAIL_DOMAIN);
 }
 
 function togglePasswordVisibility(toggle, input) {
@@ -82,14 +88,17 @@ function resolveTheme() {
 function resolveAudioPrefs() {
   try {
     const raw = window.localStorage.getItem(AUDIO_PREFS_KEY);
-    if (!raw) return { sfxEnabled: true, bgmEnabled: true };
+    if (!raw) return { sfxEnabled: true, bgmEnabled: true, bgmVolume: 100 };
     const parsed = JSON.parse(raw);
+    const parsedVolume = Number(parsed?.bgmVolume);
+    const safeVolume = Number.isFinite(parsedVolume) ? Math.max(0, Math.min(100, parsedVolume)) : 100;
     return {
       sfxEnabled: parsed?.sfxEnabled !== false,
-      bgmEnabled: parsed?.bgmEnabled !== false
+      bgmEnabled: parsed?.bgmEnabled !== false,
+      bgmVolume: safeVolume
     };
   } catch {
-    return { sfxEnabled: true, bgmEnabled: true };
+    return { sfxEnabled: true, bgmEnabled: true, bgmVolume: 100 };
   }
 }
 
@@ -112,6 +121,17 @@ function setBgmEnabled(isEnabled) {
   applyBgmPreference(audioPrefs.bgmEnabled);
 }
 
+function setBgmVolume(volume) {
+  const numeric = Number(volume);
+  audioPrefs.bgmVolume = Number.isFinite(numeric) ? Math.max(0, Math.min(100, numeric)) : 100;
+  if (audioPrefs.bgmVolume === 0 && audioPrefs.bgmEnabled) {
+    audioPrefs.bgmEnabled = false;
+    applyBgmPreference(false);
+  }
+  persistAudioPrefs();
+  applyBgmVolume(audioPrefs.bgmVolume);
+}
+
 function resolveScheme() {
   try {
     const saved = window.localStorage.getItem(THEME_SCHEME_KEY);
@@ -119,7 +139,7 @@ function resolveScheme() {
   } catch {
     // Ignore storage read failures and fallback.
   }
-  return "light";
+  return "dark";
 }
 
 function setTheme(theme) {
@@ -142,10 +162,32 @@ function setScheme(scheme) {
   }
 }
 
+function resolveReduceMotion() {
+  try {
+    const saved = window.localStorage.getItem(REDUCE_MOTION_KEY);
+    if (saved === "1") return true;
+    if (saved === "0") return false;
+  } catch {
+    // Ignore storage read failures and fallback.
+  }
+  return false;
+}
+
+function setReduceMotion(enabled) {
+  const isEnabled = Boolean(enabled);
+  document.body.dataset.reduceMotion = isEnabled ? "true" : "false";
+  try {
+    window.localStorage.setItem(REDUCE_MOTION_KEY, isEnabled ? "1" : "0");
+  } catch {
+    // Ignore storage write failures.
+  }
+}
+
 function initSettingsPanel() {
   audioPrefs = resolveAudioPrefs();
   setTheme(resolveTheme());
   setScheme(resolveScheme());
+  setReduceMotion(resolveReduceMotion());
 
   const existing = byId("settings-shell");
   if (existing) return;
@@ -161,32 +203,56 @@ function initSettingsPanel() {
       </svg>
     </button>
     <div id="settings-panel" class="settings-panel" hidden>
+      <p class="settings-heading">Game Settings</p>
       <div class="settings-row">
-        <span class="settings-row-label">Dark mode</span>
+        <span class="settings-row-label">
+          <span class="settings-row-title">Dark mode</span>
+        </span>
         <label class="toggle-switch" for="scheme-toggle" data-no-tap-sfx="true">
           <input id="scheme-toggle" type="checkbox" role="switch" />
           <span class="toggle-slider" aria-hidden="true"></span>
         </label>
       </div>
       <div class="settings-row">
-        <span class="settings-row-label">SFX</span>
+        <span class="settings-row-label">
+          <span class="settings-row-title">Reduce motion</span>
+        </span>
+        <label class="toggle-switch" for="motion-toggle" data-no-tap-sfx="true">
+          <input id="motion-toggle" type="checkbox" role="switch" />
+          <span class="toggle-slider" aria-hidden="true"></span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">
+          <span class="settings-row-title">SFX</span>
+        </span>
         <label class="toggle-switch" for="sfx-toggle">
           <input id="sfx-toggle" type="checkbox" role="switch" />
           <span class="toggle-slider" aria-hidden="true"></span>
         </label>
       </div>
       <div class="settings-row">
-        <span class="settings-row-label">Music</span>
+        <span class="settings-row-label">
+          <span class="settings-row-title">Music</span>
+        </span>
         <label class="toggle-switch" for="bgm-toggle">
           <input id="bgm-toggle" type="checkbox" role="switch" />
           <span class="toggle-slider" aria-hidden="true"></span>
         </label>
       </div>
+      <div class="settings-row settings-row-volume">
+        <span class="settings-row-label">
+          <span class="settings-row-title">Music Volume</span>
+        </span>
+        <div class="settings-volume-control">
+          <input id="bgm-volume" class="settings-volume-range" type="range" min="0" max="100" step="1" value="100" aria-label="Music volume" />
+          <span id="bgm-volume-value" class="settings-volume-value" aria-live="polite">100%</span>
+        </div>
+      </div>
       <div class="settings-row palette-row">
-        <button id="palette-toggle" class="icon-toggle palette-trigger" type="button" aria-expanded="false" aria-controls="palette-panel" aria-label="Open theme palette">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M12 3a9 9 0 1 0 0 18h1a3 3 0 0 0 0-6h-.5a1.5 1.5 0 0 1 0-3H15a3 3 0 0 0 0-6h-3zm-5.5 9A1.5 1.5 0 1 1 8 10.5 1.5 1.5 0 0 1 6.5 12zm3-4A1.5 1.5 0 1 1 11 6.5 1.5 1.5 0 0 1 9.5 8zm5.5 0A1.5 1.5 0 1 1 16.5 6.5 1.5 1.5 0 0 1 15 8z"/>
-          </svg>
+        <button id="palette-toggle" class="settings-expand-btn palette-trigger" type="button" aria-expanded="false" aria-controls="palette-panel" aria-label="Toggle theme color options">
+          <span class="settings-row-title">Theme color</span>
+          <span class="settings-row-caret" aria-hidden="true"></span>
         </button>
         <div id="palette-panel" class="palette-panel" hidden>
           <div class="palette-list">
@@ -210,16 +276,22 @@ function initSettingsPanel() {
   const paletteToggle = byId("palette-toggle");
   const palettePanel = byId("palette-panel");
   const schemeToggle = byId("scheme-toggle");
+  const motionToggle = byId("motion-toggle");
   const sfxToggle = byId("sfx-toggle");
   const bgmToggle = byId("bgm-toggle");
+  const bgmVolumeRange = byId("bgm-volume");
+  const bgmVolumeValue = byId("bgm-volume-value");
   if (
     !(settingsToggle instanceof HTMLButtonElement) ||
     !settingsPanel ||
     !(paletteToggle instanceof HTMLButtonElement) ||
     !palettePanel ||
     !(schemeToggle instanceof HTMLInputElement) ||
+    !(motionToggle instanceof HTMLInputElement) ||
     !(sfxToggle instanceof HTMLInputElement) ||
-    !(bgmToggle instanceof HTMLInputElement)
+    !(bgmToggle instanceof HTMLInputElement) ||
+    !(bgmVolumeRange instanceof HTMLInputElement) ||
+    !bgmVolumeValue
   ) return;
 
   let settingsHideTimer = null;
@@ -265,9 +337,15 @@ function initSettingsPanel() {
   const syncSettingsUi = () => {
     const currentTheme = document.body.dataset.theme || "teal";
     const currentScheme = document.body.dataset.scheme === "dark" ? "dark" : "light";
+    const reduceMotionEnabled = document.body.dataset.reduceMotion === "true";
     schemeToggle.checked = currentScheme === "dark";
+    motionToggle.checked = reduceMotionEnabled;
     sfxToggle.checked = audioPrefs.sfxEnabled;
     bgmToggle.checked = audioPrefs.bgmEnabled;
+    const volume = Math.max(0, Math.min(100, Number(audioPrefs.bgmVolume) || 100));
+    bgmVolumeRange.value = String(volume);
+    bgmVolumeValue.textContent = `${Math.round(volume)}%`;
+    bgmVolumeRange.disabled = !bgmToggle.checked;
 
     host.querySelectorAll("[data-theme-choice]").forEach((button) => {
       if (!(button instanceof HTMLButtonElement)) return;
@@ -291,12 +369,25 @@ function initSettingsPanel() {
     syncSettingsUi();
   });
 
+  motionToggle.addEventListener("change", () => {
+    setReduceMotion(motionToggle.checked);
+    syncSettingsUi();
+  });
+
   sfxToggle.addEventListener("change", () => {
     setSfxEnabled(sfxToggle.checked);
   });
 
   bgmToggle.addEventListener("change", () => {
     setBgmEnabled(bgmToggle.checked);
+    bgmVolumeRange.disabled = !bgmToggle.checked;
+  });
+
+  bgmVolumeRange.addEventListener("input", () => {
+    const next = Number(bgmVolumeRange.value);
+    setBgmVolume(next);
+    bgmVolumeValue.textContent = `${Math.round(next)}%`;
+    syncSettingsUi();
   });
 
   paletteToggle.addEventListener("click", () => {
@@ -398,15 +489,21 @@ function initSharedBgm(page) {
   if (saveData) return;
 
   const isLowEnd = document.documentElement.classList.contains("low-end");
+  const maxVolume = isLowEnd ? 0.12 : 0.16;
+  const resolveTargetVolume = () => {
+    const pct = Math.max(0, Math.min(100, Number(audioPrefs.bgmVolume) || 100));
+    return maxVolume * (pct / 100);
+  };
   const audio = new Audio(BGM_SRC);
   audio.loop = true;
   audio.preload = "auto";
-  audio.volume = isLowEnd ? 0.12 : 0.16;
+  audio.volume = 0;
   audio.playsInline = true;
 
   let hasStarted = false;
   let startPending = false;
   let persistTimer = null;
+  let fadeTimer = null;
 
   const isUnlocked = () => {
     try {
@@ -469,6 +566,30 @@ function initSharedBgm(page) {
     }
   };
 
+  const clearFadeTimer = () => {
+    if (fadeTimer) {
+      window.clearInterval(fadeTimer);
+      fadeTimer = null;
+    }
+  };
+
+  const fadeVolumeTo = (target, durationMs = 900) => {
+    const clampedTarget = Math.max(0, Math.min(1, Number(target) || 0));
+    const startVolume = Math.max(0, Math.min(1, Number(audio.volume) || 0));
+    const stepMs = 50;
+    const steps = Math.max(1, Math.ceil(durationMs / stepMs));
+    let currentStep = 0;
+    clearFadeTimer();
+    fadeTimer = window.setInterval(() => {
+      currentStep += 1;
+      const t = Math.min(1, currentStep / steps);
+      audio.volume = startVolume + (clampedTarget - startVolume) * t;
+      if (t >= 1) {
+        clearFadeTimer();
+      }
+    }, stepMs);
+  };
+
   const start = () => {
     if (!audioPrefs.bgmEnabled) return;
     if (startPending) return;
@@ -477,6 +598,8 @@ function initSharedBgm(page) {
       return;
     }
     startPending = true;
+    audio.volume = 0;
+    audio.muted = true;
     const playPromise = audio.play();
     if (!playPromise || typeof playPromise.then !== "function") {
       startPending = false;
@@ -487,6 +610,9 @@ function initSharedBgm(page) {
         hasStarted = true;
         startPending = false;
         markUnlocked();
+        // Start muted (autoplay-safe), then reveal audio with a smooth fade.
+        audio.muted = false;
+        fadeVolumeTo(resolveTargetVolume(), 900);
       })
       .catch(() => {
         startPending = false;
@@ -507,7 +633,7 @@ function initSharedBgm(page) {
 
   restoreState();
   audio.load();
-  if (!isLowEnd && isUnlocked() && audioPrefs.bgmEnabled) {
+  if (audioPrefs.bgmEnabled) {
     window.setTimeout(start, 250);
   }
 
@@ -522,6 +648,7 @@ function initSharedBgm(page) {
   document.addEventListener("visibilitychange", () => {
     if (!audioPrefs.bgmEnabled) return;
     if (document.hidden) {
+      clearFadeTimer();
       persistState();
       if (!audio.paused) audio.pause();
       return;
@@ -532,6 +659,7 @@ function initSharedBgm(page) {
   });
 
   window.addEventListener("pagehide", () => {
+    clearFadeTimer();
     persistState();
     if (!audio.paused) audio.pause();
     if (persistTimer) {
@@ -553,9 +681,20 @@ function initSharedBgm(page) {
       start();
       return;
     }
+    clearFadeTimer();
     if (!audio.paused) {
       audio.pause();
     }
+  };
+
+  applyBgmVolume = (volume) => {
+    const pct = Math.max(0, Math.min(100, Number(volume) || 100));
+    const target = maxVolume * (pct / 100);
+    if (audio.paused || audio.muted) {
+      audio.volume = target;
+      return;
+    }
+    fadeVolumeTo(target, 220);
   };
 }
 
@@ -644,29 +783,39 @@ function initHomeAuthFlow() {
   const signupPanel = byId("home-signup-panel");
   if (!modal || !signinPanel || !signupPanel) return;
 
+  const animatePanel = (panel) => {
+    panel.classList.remove("panel-animate");
+    void panel.offsetWidth;
+    panel.classList.add("panel-animate");
+  };
+
   const showPanel = (mode) => {
-    const isSignup = mode === "signup";
-    signinPanel.hidden = isSignup;
-    signupPanel.hidden = !isSignup;
+    const activeMode = mode === "signup" ? "signup" : "signin";
+    signinPanel.hidden = activeMode !== "signin";
+    signupPanel.hidden = activeMode !== "signup";
+    const activePanel = activeMode === "signup" ? signupPanel : signinPanel;
+    animatePanel(activePanel);
     modal.hidden = false;
+    modal.classList.add("is-open");
     document.body.classList.add("auth-modal-open");
   };
 
   const closeModal = () => {
     modal.hidden = true;
+    modal.setAttribute("hidden", "");
+    modal.classList.remove("is-open");
     document.body.classList.remove("auth-modal-open");
+    // Reset to a known default state to avoid blank/corrupt modal content on reopen.
+    signinPanel.hidden = false;
+    signupPanel.hidden = true;
     if (window.location.hash === "#signin" || window.location.hash === "#signup") {
-      history.replaceState(null, "", window.location.pathname);
+      history.replaceState(null, "", window.location.pathname + window.location.search);
     }
   };
 
   const openModal = (mode) => {
     const safeMode = mode === "signup" ? "signup" : "signin";
     showPanel(safeMode);
-    const nextHash = safeMode === "signup" ? "#signup" : "#signin";
-    if (window.location.hash !== nextHash) {
-      history.replaceState(null, "", `${window.location.pathname}${nextHash}`);
-    }
   };
 
   document.querySelectorAll("[data-open-auth]").forEach((node) => {
@@ -686,9 +835,21 @@ function initHomeAuthFlow() {
   });
 
   document.querySelectorAll("[data-auth-close]").forEach((node) => {
-    node.addEventListener("click", () => {
+    node.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       closeModal();
     });
+  });
+
+  // Delegated close safety-net for dynamic UI timing/animation edge cases.
+  modal.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (!target.closest("[data-auth-close]")) return;
+    event.preventDefault();
+    event.stopPropagation();
+    closeModal();
   });
 
   document.addEventListener("keydown", (event) => {
@@ -697,20 +858,14 @@ function initHomeAuthFlow() {
     }
   });
 
-  const syncFromHash = () => {
-    if (window.location.hash === "#signin") {
-      showPanel("signin");
-      return;
-    }
-    if (window.location.hash === "#signup") {
-      showPanel("signup");
-      return;
-    }
+  // One-time hash support on initial load only.
+  if (window.location.hash === "#signin") {
+    openModal("signin");
+  } else if (window.location.hash === "#signup") {
+    openModal("signup");
+  } else {
     closeModal();
-  };
-
-  window.addEventListener("hashchange", syncFromHash);
-  syncFromHash();
+  }
 }
 
 function initHome() {
@@ -800,7 +955,7 @@ function initLogin() {
       password: password.value
     };
 
-    if (email !== ALLOWED_EMAIL) {
+    if (!isAllowedSchoolEmail(email)) {
       emailInput.classList.add("input-invalid");
       playInvalidInputSfx();
       return;

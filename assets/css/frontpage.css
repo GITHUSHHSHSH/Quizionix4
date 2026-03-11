@@ -50,6 +50,16 @@ body[data-page="home"] .top-nav.game-top-nav {
   box-shadow: none;
 }
 
+body[data-page="home"] .settings-shell {
+  z-index: 9;
+}
+
+body.auth-modal-open .settings-shell {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 body[data-page="home"] .game-top-actions {
   justify-content: center;
   align-items: center;
@@ -180,7 +190,7 @@ body[data-page="home"] .home-auth-backdrop {
   background: rgba(8, 12, 30, 0.62);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  cursor: pointer;
+  cursor: url("../media/icons/cursor-hover-32.png") 1 1, pointer;
 }
 
 body[data-page="home"] .home-auth-shell {
@@ -246,7 +256,12 @@ html.touch-ui body[data-page="home"] .start-journey-btn {
 }
 
 html.low-end body[data-page="home"] {
-  background: linear-gradient(165deg, var(--bg), var(--bg-2)) !important;
+  background:
+    radial-gradient(circle at 14% 20%, color-mix(in srgb, var(--theme-light) 34%, transparent), transparent 46%),
+    radial-gradient(circle at 84% 82%, color-mix(in srgb, var(--theme-accent) 28%, transparent), transparent 48%),
+    linear-gradient(165deg, var(--bg), var(--bg-2)) !important;
+  background-size: 130% 130%, 130% 130%, 120% 120%;
+  animation: home-gradient-drift 36s ease-in-out infinite alternate !important;
 }
 
 html.low-end body[data-page="home"] .top-nav.game-top-nav {
@@ -510,8 +525,8 @@ html.low-end body[data-page="home"] .home-auth-backdrop {
 }
 
 /* Pastel Background System: unified soft game-style look */
-body[data-page="home"],
-body[data-theme="light"][data-page="home"] {
+html:not(.low-end) body[data-page="home"],
+html:not(.low-end) body[data-theme="light"][data-page="home"] {
   --home-text: var(--ink);
   --home-text-soft: var(--muted);
   --home-line: var(--surface-border);
@@ -523,7 +538,7 @@ body[data-theme="light"][data-page="home"] {
     radial-gradient(72% 72% at 28% 86%, color-mix(in srgb, var(--theme-base) 38%, transparent), transparent 74%),
     linear-gradient(158deg, var(--bg) 0%, var(--bg-2) 100%) !important;
   background-size: 120% 120%, 130% 130%, 140% 140%, 115% 115%;
-  animation: pastel-gradient-drift 28s ease-in-out infinite alternate !important;
+  animation: pastel-gradient-drift 28s ease-in-out infinite alternate;
 }
 
 body[data-page="home"] .landing-cosmic {
@@ -646,6 +661,18 @@ body[data-page="home"] .game-top-actions .link:hover {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Stabilize home background on low-end devices to prevent flicker/glitch. */
+html.low-end body[data-page="home"] .scene-motion {
+  display: none !important;
+}
+
+html.low-end body[data-page="home"] .landing-cosmic::before,
+html.low-end body[data-page="home"] .landing-cosmic::after {
+  content: none !important;
+  animation: none !important;
+  box-shadow: none !important;
 }
 
 body[data-page="home"] .game-title {
