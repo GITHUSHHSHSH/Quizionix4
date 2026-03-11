@@ -203,7 +203,10 @@ function initSettingsPanel() {
       </svg>
     </button>
     <div id="settings-panel" class="settings-panel" hidden>
-      <p class="settings-heading">Game Settings</p>
+      <div class="settings-header">
+        <button id="settings-close" class="settings-close" type="button" aria-label="Close settings" data-no-tap-sfx="true"></button>
+        <p class="settings-heading">Game Settings</p>
+      </div>
       <div class="settings-row">
         <span class="settings-row-label">
           <span class="settings-row-title">Dark mode</span>
@@ -274,6 +277,7 @@ function initSettingsPanel() {
   const settingsToggle = byId("settings-toggle");
   const settingsPanel = byId("settings-panel");
   const paletteToggle = byId("palette-toggle");
+  const settingsClose = byId("settings-close");
   const palettePanel = byId("palette-panel");
   const schemeToggle = byId("scheme-toggle");
   const motionToggle = byId("motion-toggle");
@@ -286,6 +290,7 @@ function initSettingsPanel() {
     !settingsPanel ||
     !(paletteToggle instanceof HTMLButtonElement) ||
     !palettePanel ||
+    !(settingsClose instanceof HTMLButtonElement) ||
     !(schemeToggle instanceof HTMLInputElement) ||
     !(motionToggle instanceof HTMLInputElement) ||
     !(sfxToggle instanceof HTMLInputElement) ||
@@ -296,6 +301,9 @@ function initSettingsPanel() {
 
   let settingsHideTimer = null;
   let paletteHideTimer = null;
+  const setSettingsOpen = (isOpen) => {
+    document.body.classList.toggle("settings-open", isOpen);
+  };
 
   const closePalettePanel = () => {
     if (paletteHideTimer) window.clearTimeout(paletteHideTimer);
@@ -314,6 +322,7 @@ function initSettingsPanel() {
     }, 170);
     settingsToggle.setAttribute("aria-expanded", "false");
     closePalettePanel();
+    setSettingsOpen(false);
   };
 
   const openSettingsPanel = () => {
@@ -323,6 +332,7 @@ function initSettingsPanel() {
       settingsPanel.classList.add("is-open");
     });
     settingsToggle.setAttribute("aria-expanded", "true");
+    setSettingsOpen(true);
   };
 
   const openPalettePanel = () => {
@@ -360,6 +370,10 @@ function initSettingsPanel() {
       openSettingsPanel();
       return;
     }
+    closeSettingsPanel();
+  });
+
+  settingsClose.addEventListener("click", () => {
     closeSettingsPanel();
   });
 
@@ -420,6 +434,11 @@ function initSettingsPanel() {
       closePalettePanel();
       return;
     }
+    closeSettingsPanel();
+  });
+
+  document.addEventListener("settings:close", () => {
+    if (settingsPanel.hidden) return;
     closeSettingsPanel();
   });
 
@@ -815,6 +834,7 @@ function initHomeAuthFlow() {
 
   const openModal = (mode) => {
     const safeMode = mode === "signup" ? "signup" : "signin";
+    document.dispatchEvent(new CustomEvent("settings:close"));
     showPanel(safeMode);
   };
 

@@ -125,6 +125,31 @@ body[data-page="home"] .hero-copy {
   transform: translateY(-2.5vh);
 }
 
+body[data-page="home"] .hero-pop {
+  display: block;
+}
+
+html:not(.low-end) body[data-page="home"].page-enter .top-nav.game-top-nav {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.98);
+  will-change: transform, opacity;
+}
+
+html:not(.low-end) body[data-page="home"].page-enter .hero-pop {
+  opacity: 0;
+  transform: translateY(18px) scale(0.98);
+  filter: blur(8px);
+  will-change: transform, opacity, filter;
+}
+
+html:not(.low-end) body[data-page="home"].page-enter.page-enter-active .top-nav.game-top-nav {
+  animation: landing-pop-nav 720ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
+}
+
+html:not(.low-end) body[data-page="home"].page-enter.page-enter-active .hero-pop {
+  animation: landing-pop 900ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
+}
+
 body[data-page="home"] .game-title {
   /* Centered title with equal spacing and simple reveal animation */
   display: inline-flex;
@@ -404,6 +429,39 @@ html.low-end body[data-page="home"] .home-auth-backdrop {
   }
 }
 
+@keyframes landing-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    filter: blur(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.01);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes landing-pop-nav {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.98);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes cta-sheen {
   from {
     transform: translateX(-130%);
@@ -510,6 +568,14 @@ html.low-end body[data-page="home"] .home-auth-backdrop {
   body[data-page="home"] .start-journey-btn {
     transition: none;
     transform: none !important;
+    animation: none !important;
+  }
+
+  html:not(.low-end) body[data-page="home"].page-enter .top-nav.game-top-nav,
+  html:not(.low-end) body[data-page="home"].page-enter .hero-pop {
+    opacity: 1;
+    transform: none !important;
+    filter: none !important;
     animation: none !important;
   }
 
